@@ -159,6 +159,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
                 delete userPosts[_user][i];
             }
         }
+        deleteIdFromPostIds(_id);
     }
 
     //delete a public post
@@ -166,6 +167,26 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         if(posts[_id].id == _id){
             delete posts[_id];
         }
+        deleteIdFromPostIds(_id);
+    }
+
+    function deleteAllPosts() public onlyOwner {
+        for(uint i = 0; i < postIds.length; i++) {
+            address poster = posts[i].poster;
+            delete userPosts[poster][i];
+            delete posts[i];
+        }
+        delete postIds;
+    }
+
+    function deleteIdFromPostIds(uint256 _id) public onlyOwner  {
+        uint256 indexToDelete;
+        for(uint i = 0; i < postIds.length; i++) {
+            if(postIds[i] == _id) {
+                indexToDelete = i;
+            }
+        }
+        delete postIds[indexToDelete];
     }
 
     //to make it easier this one calls both deletes
