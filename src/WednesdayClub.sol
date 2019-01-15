@@ -111,7 +111,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         //ensure that post exists
         if (posts[_id].id == _id) {
             //shouldnt be able to like your own post
-            //require(posts[_id].poster != msg.sender);
+            require(posts[_id].poster != msg.sender);
             if (wednesdayCoin.transferFrom(msg.sender, posts[_id].poster, _value)) {
                 posts[_id].value += _value;
                 posts[_id].likes++;
@@ -135,7 +135,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         //ensure that post exists
         if (posts[_id].id == _id) {
             //shouldnt be able to like your own post
-            //require(posts[_id].poster != msg.sender);
+            require(posts[_id].poster != msg.sender);
             if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
                 posts[_id].reportCount++;
                 poster = posts[_id].poster;
@@ -176,7 +176,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
 
     function follow(address _address, uint256 _value) public onlyWednesdays whenNotPaused {
         require(_value >= minimumForFollow);
-        //require(msg.sender != _address);
+        require(msg.sender != _address);
         // update that user is following address
         if (wednesdayCoin.transferFrom(msg.sender, _address, _value)) {
             following[msg.sender].push(_address);
@@ -231,7 +231,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
 
     function hasElapsedReport() public returns (bool) {
         if (now >= reportTime[msg.sender] + reportInterval) {
-            //has elapsed from postTime[msg.sender]
+            //has elapsed from reportTime[msg.sender]
             return true;
         }
         return false;
