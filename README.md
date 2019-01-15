@@ -1,7 +1,7 @@
 # WednesdayClub
 WednesdayClub Smart Contract - for a social network that works only on Wednesdays and uses WED!
 
-![WednesdayClub](https://i.imgur.com/lvnvPnK.gif)
+![WednesdayClub](https://i.imgur.com/kLLRDzi.gif)
 
 WednesdayClub is our semi-decentralized Wednesday based social network chat app! That means that we are storing some information on the blockchain and some on our servers. WednesdayClub is unique in that it is only usable on Wednesdays and runs on WednesdayCoin!
 
