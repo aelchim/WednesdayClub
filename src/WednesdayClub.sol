@@ -173,10 +173,9 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
     function deleteAllPosts() public onlyOwner {
         for(uint i = 0; i < postIds.length; i++) {
             address poster = posts[i].poster;
-            delete userPosts[poster][i];
-            delete posts[i];
+            deleteUserPost(poster, posts[i].id);
+            deletePublicPost(posts[i].id);
         }
-        delete postIds;
     }
 
     function deleteIdFromPostIds(uint256 _id) public onlyOwner  {
