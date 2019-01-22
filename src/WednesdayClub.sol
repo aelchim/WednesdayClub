@@ -13,11 +13,11 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         address poster;
         uint256 value;
         uint256 likes;
-        string content;
         uint256 timestamp;
-        string media;
         uint256 reportCount;
     }
+
+    event PostContent(uint256 indexed id, string content, string media);
 
     //onlyWednesdays Modifier
     modifier onlyWednesdays() {
@@ -29,7 +29,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
     }
 
     // The posts that each address has written
-    mapping(address => Post[]) public userPosts;
+    mapping(address => uint256[]) public userPosts;
 
     // All the posts ever written by ID
     mapping(uint256 => Post) public posts;
@@ -88,15 +88,16 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
     }
 
     // Adds a new post
-    function writePost(uint256 _id, uint256 _value, string memory _content, string memory _media) public onlyWednesdays whenNotPaused {
+    function writePost(uint256 _id, uint256 _value, string _content, string _media) public onlyWednesdays whenNotPaused {
         require(amountForPost == _value);
         require(hasElapsed());
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
         //for create
         if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
-            Post memory post = Post(_id, msg.sender, 0, 0, _content, now, _media, 0);
-            userPosts[msg.sender].push(post);
+            emit PostContent(_id, _content, _media);
+            Post memory post = Post(_id, msg.sender, 0, 0, now, 0);
+            userPosts[msg.sender].push(_id);
             posts[_id] = post;
             postIds.push(_id);
             postTime[msg.sender] = now;
@@ -116,13 +117,6 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
                 posts[_id].value += _value;
                 posts[_id].likes++;
                 poster = posts[_id].poster;
-                // updating entry from userPosts
-                for (uint i = 0; i < userPosts[poster].length; i++) {
-                    if (userPosts[poster][i].id == _id) {
-                        userPosts[poster][i].value += _value;
-                        userPosts[poster][i].likes++;
-                    }
-                }
             } else {
                 revert();
             }
@@ -139,12 +133,6 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
             if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
                 posts[_id].reportCount++;
                 poster = posts[_id].poster;
-                // updating entry from userPosts
-                for (uint i = 0; i < userPosts[poster].length; i++) {
-                    if (userPosts[poster][i].id == _id) {
-                        userPosts[poster][i].reportCount++;
-                    }
-                }
                 reportTime[msg.sender] = now;
             } else {
                 revert();
@@ -155,7 +143,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
     //delete a user post
     function deleteUserPost(address _user, uint256 _id) public onlyOwner {
         for(uint i = 0; i < userPosts[_user].length; i++) {
-            if(userPosts[_user][i].id == _id){
+            if(userPosts[_user][i] == _id){
                 delete userPosts[_user][i];
             }
         }

@@ -1,13 +1,8 @@
 [
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "unfollow",
+    "inputs": [],
+    "name": "deleteAllPosts",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -17,15 +12,11 @@
     "constant": false,
     "inputs": [
       {
-        "name": "dest",
-        "type": "address"
-      },
-      {
-        "name": "amount",
+        "name": "_id",
         "type": "uint256"
       }
     ],
-    "name": "transferEther",
+    "name": "deleteIdFromPostIds",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -50,50 +41,58 @@
     "type": "function"
   },
   {
-    "constant": true,
+    "constant": false,
     "inputs": [
       {
-        "name": "",
+        "name": "_id",
         "type": "uint256"
       }
     ],
-    "name": "posts",
-    "outputs": [
+    "name": "deletePublicPost",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
       {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "poster",
+        "name": "_user",
         "type": "address"
       },
       {
-        "name": "value",
-        "type": "uint256"
-      },
-      {
-        "name": "likes",
-        "type": "uint256"
-      },
-      {
-        "name": "content",
-        "type": "string"
-      },
-      {
-        "name": "timestamp",
-        "type": "uint256"
-      },
-      {
-        "name": "media",
-        "type": "string"
-      },
-      {
-        "name": "reportCount",
+        "name": "_id",
         "type": "uint256"
       }
     ],
+    "name": "deleteUserPost",
+    "outputs": [],
     "payable": false,
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "destroy",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_recipient",
+        "type": "address"
+      }
+    ],
+    "name": "destroyAndSend",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -115,80 +114,15 @@
     "type": "function"
   },
   {
-    "constant": true,
+    "constant": false,
     "inputs": [],
-    "name": "minimumForFollow",
+    "name": "hasElapsed",
     "outputs": [
       {
         "name": "",
-        "type": "uint256"
+        "type": "bool"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "minimumForLike",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_postInterval",
-        "type": "uint256"
-      }
-    ],
-    "name": "setPostInterval",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_minimumForLike",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinimumForLike",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_amountForPost",
-        "type": "uint256"
-      }
-    ],
-    "name": "setAmountForPost",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "unpause",
-    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -226,303 +160,12 @@
     "type": "function"
   },
   {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_address",
-        "type": "address"
-      }
-    ],
-    "name": "getFollowersLength",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      },
-      {
-        "name": "_content",
-        "type": "string"
-      },
-      {
-        "name": "_media",
-        "type": "string"
-      }
-    ],
-    "name": "writePost",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "deletePublicPost",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "postInterval",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "postTime",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "postIds",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_user",
-        "type": "address"
-      },
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "deleteUserPost",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "wednesdayCoin",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "amountForPost",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "userPosts",
-    "outputs": [
-      {
-        "name": "id",
-        "type": "uint256"
-      },
-      {
-        "name": "poster",
-        "type": "address"
-      },
-      {
-        "name": "value",
-        "type": "uint256"
-      },
-      {
-        "name": "likes",
-        "type": "uint256"
-      },
-      {
-        "name": "content",
-        "type": "string"
-      },
-      {
-        "name": "timestamp",
-        "type": "uint256"
-      },
-      {
-        "name": "media",
-        "type": "string"
-      },
-      {
-        "name": "reportCount",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_value",
-        "type": "uint256"
-      }
-    ],
-    "name": "reportPost",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [],
-    "name": "destroy",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "constant": false,
     "inputs": [],
     "name": "pause",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "minimumForReporting",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "reportInterval",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -557,6 +200,301 @@
     "type": "function"
   },
   {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "reportPost",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_amountForPost",
+        "type": "uint256"
+      }
+    ],
+    "name": "setAmountForPost",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_minimumForFollow",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinimumForFollow",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_minimumForLike",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinimumForLike",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_minimumForReporting",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinimumForReporting",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_postInterval",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPostInterval",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_reportInterval",
+        "type": "uint256"
+      }
+    ],
+    "name": "setReportingInterval",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "tokenAddress",
+        "type": "address"
+      },
+      {
+        "name": "tokens",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferAnyERC20Token",
+    "outputs": [
+      {
+        "name": "success",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "dest",
+        "type": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferEther",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_address",
+        "type": "address"
+      }
+    ],
+    "name": "unfollow",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
+      },
+      {
+        "name": "_content",
+        "type": "string"
+      },
+      {
+        "name": "_media",
+        "type": "string"
+      }
+    ],
+    "name": "writePost",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "media",
+        "type": "string"
+      }
+    ],
+    "name": "PostContent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Unpaused",
+    "type": "event"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "amountForPost",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "followers",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": true,
     "inputs": [
       {
@@ -580,61 +518,14 @@
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_reportInterval",
-        "type": "uint256"
-      }
-    ],
-    "name": "setReportingInterval",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "constant": true,
     "inputs": [
       {
-        "name": "",
+        "name": "_address",
         "type": "address"
       }
     ],
-    "name": "reportTime",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_minimumForFollow",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinimumForFollow",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_user",
-        "type": "address"
-      }
-    ],
-    "name": "getUserPostLength",
+    "name": "getFollowersLength",
     "outputs": [
       {
         "name": "",
@@ -665,20 +556,6 @@
     "type": "function"
   },
   {
-    "constant": false,
-    "inputs": [],
-    "name": "hasElapsed",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
     "constant": true,
     "inputs": [],
     "name": "getPostIdsLength",
@@ -693,26 +570,216 @@
     "type": "function"
   },
   {
-    "constant": false,
+    "constant": true,
     "inputs": [
       {
-        "name": "tokenAddress",
+        "name": "_user",
         "type": "address"
-      },
+      }
+    ],
+    "name": "getUserPostLength",
+    "outputs": [
       {
-        "name": "tokens",
+        "name": "",
         "type": "uint256"
       }
     ],
-    "name": "transferAnyERC20Token",
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "minimumForFollow",
     "outputs": [
       {
-        "name": "success",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "minimumForLike",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "minimumForReporting",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "paused",
+    "outputs": [
+      {
+        "name": "",
         "type": "bool"
       }
     ],
     "payable": false,
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "postIds",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "postInterval",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "posts",
+    "outputs": [
+      {
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "poster",
+        "type": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "name": "likes",
+        "type": "uint256"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "reportCount",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "postTime",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "reportInterval",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "reportTime",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -727,7 +794,21 @@
         "type": "uint256"
       }
     ],
-    "name": "followers",
+    "name": "userPosts",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "wednesdayCoin",
     "outputs": [
       {
         "name": "",
@@ -737,77 +818,5 @@
     "payable": false,
     "stateMutability": "view",
     "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_minimumForReporting",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMinimumForReporting",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_recipient",
-        "type": "address"
-      }
-    ],
-    "name": "destroyAndSend",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Paused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Unpaused",
-    "type": "event"
   }
 ]
