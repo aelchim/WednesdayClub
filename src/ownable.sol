@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.4.25;
 
 /**
  * @title Ownable
@@ -7,7 +7,7 @@ pragma solidity ^0.5.0;
  */
 contract Ownable {
 
-    address payable public owner;
+    address public owner;
 
     /**
      * @dev The Ownable constructor sets the original `owner` of the contract to the sender
@@ -31,7 +31,7 @@ contract Ownable {
      * @dev Allows the current owner to transfer control of the contract to a newOwner.
      * @param newOwner The address to transfer ownership to.
      */
-    function transferOwnership(address payable newOwner) public onlyOwner {
+    function transferOwnership(address newOwner) public onlyOwner {
         require(newOwner != address(0));
         owner = newOwner;
     }

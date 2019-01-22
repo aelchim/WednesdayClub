@@ -37,12 +37,14 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
     // Keep track of all IDs - use for loading
     uint256[] public postIds;
 
+    // banned userPosts
+    mapping (address => uint) public suspendedUsers;
+
     // followers: list of who is following
     mapping(address => address[]) public followers;
 
     // following: list of who you are following
     mapping(address => address[]) public following;
-
 
     // WednesdayCoin contract being held
     WednesdayCoin public wednesdayCoin;
@@ -108,6 +110,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
 
     function likePost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused {
         require(_value >= minimumForLike);
+        require(hasSuspensionElapsed());
         address poster;
         //ensure that post exists
         if (posts[_id].id == _id) {
@@ -125,6 +128,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
 
     function reportPost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused {
         require(hasElapsedReport());
+        require(hasSuspensionElapsed());
         address poster;
         //ensure that post exists
         if (posts[_id].id == _id) {
@@ -184,6 +188,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
 
     function follow(address _address, uint256 _value) public onlyWednesdays whenNotPaused {
         require(_value >= minimumForFollow);
+        require(hasSuspensionElapsed());
         require(msg.sender != _address);
         // update that user is following address
         if (wednesdayCoin.transferFrom(msg.sender, _address, _value)) {
@@ -196,6 +201,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
     }
 
     function unfollow(address _address) public onlyWednesdays whenNotPaused {
+        require(hasSuspensionElapsed());
         require(msg.sender != _address);
         // delete that user is folowing address
         for(uint i = 0; i < following[msg.sender].length; i++) {
@@ -229,7 +235,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         dest.transfer(amount);
     }
 
-    function hasElapsed() public returns (bool) {
+    function hasElapsed() public view returns (bool) {
         if (now >= postTime[msg.sender] + postInterval) {
             //has elapsed from postTime[msg.sender]
             return true;
@@ -237,12 +243,24 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         return false;
     }
 
-    function hasElapsedReport() public returns (bool) {
+    function hasElapsedReport() public view returns (bool) {
         if (now >= reportTime[msg.sender] + reportInterval) {
             //has elapsed from reportTime[msg.sender]
             return true;
         }
         return false;
+    }
+
+    function hasSuspensionElapsed() public view returns (bool) {
+        if (now >= suspendedUsers[msg.sender]) {
+            //has elapsed from postTime[msg.sender]
+            return true;
+        }
+        return false;
+    }
+
+    function suspendUser(address _user, uint _time) public onlyOwner {
+        suspendedUsers[_user] = now + _time;
     }
 
     function setPostInterval(uint _postInterval) public onlyOwner {
