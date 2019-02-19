@@ -4,20 +4,11 @@ import "./ownable.sol";
 import "./pausable.sol";
 import "./destructible.sol";
 import "./tokenInterfaces.sol";
+import "./WednesdayClubPost.sol";
+import "./WednesdayClubComment.sol";
+import "./WednesdayClubUser.sol";
 
-contract WednesdayClub is Ownable, Destructible, Pausable {
-
-    // The structure of a post
-    struct Post {
-        uint256 id;
-        address poster;
-        uint256 value;
-        uint256 likes;
-        uint256 timestamp;
-        uint256 reportCount;
-    }
-
-    event PostContent(uint256 indexed id, string content, string media);
+contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, WednesdayClubComment, WednesdayClubUser {
 
     //onlyWednesdays Modifier
     modifier onlyWednesdays() {
@@ -28,71 +19,45 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         _;
     }
 
-    // The posts that each address has written
-    mapping(address => uint256[]) public userPosts;
+    modifier whenNotSuspended() {
+        require(hasSuspensionElapsed());
+        _;
+    }
 
-    // All the posts ever written by ID
-    mapping(uint256 => Post) public posts;
+    modifier whenTimeElapsedPost() {
+        require(hasElapsedPost());
+        _;
+    }
 
-    // Keep track of all IDs - use for loading
-    uint256[] public postIds;
-
-    // banned userPosts
-    mapping (address => uint) public suspendedUsers;
-
-    // followers: list of who is following
-    mapping(address => address[]) public followers;
-
-    // following: list of who you are following
-    mapping(address => address[]) public following;
+    modifier whenTimeElapsedComment() {
+        require(hasElapsedComment());
+        _;
+    }
 
     // WednesdayCoin contract being held
     WednesdayCoin public wednesdayCoin;
 
-    // amountForPost
-    uint256 public amountForPost;
-
-    // minimum amount For likes
-    uint256 public minimumForLike;
-
-    // minimum amount For following
-    uint256 public minimumForFollow;
-
-    // minimum amount For reporting
-    uint256 public minimumForReporting;
-
-    //ensure that each user can only post once at everyinterval
-    mapping(address => uint) public postTime;
-
-    //interval user has to wait to be able to post
-    uint public postInterval;
-
-    //ensure that each user can only post once at everyinterval
-    mapping(address => uint) public reportTime;
-
-    //interval user has to wait to be able to post
-    uint public reportInterval;
-
     //constructor
     constructor() public {
-        //for testing -- 0xedfc38fed24f14aca994c47af95a14a46fbbaa16
-        wednesdayCoin = WednesdayCoin(0x7848ae8f19671dc05966dafbefbbbb0308bdfabd);
-        amountForPost = 10000000000000000000000;
+        //for testing -- 0xEDFc38FEd24F14aca994C47AF95A14a46FBbAA16
+        wednesdayCoin = WednesdayCoin(0x7848ae8F19671Dc05966dafBeFbBbb0308BDfAbD);
+        amountForPost = 10000000000000000000000; //10k
+        amountForComment = 1000000000000000000000; //1k
         postInterval = 10 minutes;
-        minimumForLike = 1000000000000000000000;
-        minimumForFollow = 100000000000000000000;
-        minimumForReporting = 100000000000000000000;
+        commentInterval = 5 minutes;
+        minimumToLikePost = 1000000000000000000000; //1k
+        minimumToLikeComment = 100000000000000000000; //100
+        minimumForFollow = 100000000000000000000; //100
+        minimumForReporting = 100000000000000000000; //100
         reportInterval = 10 minutes;
     }
 
-    function receiveApproval(address from, uint256 value, address tokenContract, bytes extraData) public returns (bool) {
-
-    }
-
+    /*****************************************************************************************
+     * Posts logic - add, like, report, delete
+     * ***************************************************************************************/
     // Adds a new post
-    function writePost(uint256 _id, uint256 _value, string _content, string _media) public onlyWednesdays whenNotPaused {
+    function writePost(uint256 _id, uint256 _value, string _content, string _media) public onlyWednesdays whenNotPaused whenNotSuspended whenTimeElapsedPost {
         require(amountForPost == _value);
-        require(hasElapsed());
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
         //for create
@@ -108,10 +73,8 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         }
     }
 
-    function likePost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused {
-        require(_value >= minimumForLike);
-        require(hasSuspensionElapsed());
-        address poster;
+    function likePost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+        require(_value >= minimumToLikePost);
         //ensure that post exists
         if (posts[_id].id == _id) {
             //shouldnt be able to like your own post
@@ -119,24 +82,20 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
             if (wednesdayCoin.transferFrom(msg.sender, posts[_id].poster, _value)) {
                 posts[_id].value += _value;
                 posts[_id].likes++;
-                poster = posts[_id].poster;
             } else {
                 revert();
             }
         }
     }
 
-    function reportPost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused {
+    function reportPost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
         require(hasElapsedReport());
-        require(hasSuspensionElapsed());
-        address poster;
         //ensure that post exists
         if (posts[_id].id == _id) {
-            //shouldnt be able to like your own post
+            //shouldnt be able to report your own post
             require(posts[_id].poster != msg.sender);
             if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
                 posts[_id].reportCount++;
-                poster = posts[_id].poster;
                 reportTime[msg.sender] = now;
             } else {
                 revert();
@@ -151,22 +110,12 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
                 delete userPosts[_user][i];
             }
         }
-        deleteIdFromPostIds(_id);
     }
 
     //delete a public post
     function deletePublicPost(uint256 _id) public onlyOwner {
         if(posts[_id].id == _id){
             delete posts[_id];
-        }
-        deleteIdFromPostIds(_id);
-    }
-
-    function deleteAllPosts() public onlyOwner {
-        for(uint i = 0; i < postIds.length; i++) {
-            address poster = posts[i].poster;
-            deleteUserPost(poster, posts[i].id);
-            deletePublicPost(posts[i].id);
         }
     }
 
@@ -179,16 +128,128 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         }
         delete postIds[indexToDelete];
     }
+    // deleteAllPosts from PostIds
+    function deleteAllPosts() public onlyOwner {
+        deleteAllPosts(postIds.length);
+    }
 
-    //to make it easier this one calls both deletes
+    // deleteAllPosts in groups i.e. delete 100, then 100 again, etc - for saving on gas and incase to many
+    function deleteAllPosts(uint256 amountToDelete) public onlyOwner {
+        for(uint i = 0; i < amountToDelete; i++) {
+            address poster = posts[postIds[i]].poster;
+            deleteUserPost(poster, posts[postIds[i]].id);
+            deletePublicPost(posts[postIds[i]].id);
+            deleteIdFromPostIds(posts[postIds[i]].id);
+        }
+    }
+
+    //to make it easier this one calls all delete functions
     function deletePost(address _user, uint256 _id) public onlyOwner {
         deleteUserPost(_user, _id);
         deletePublicPost(_id);
+        deleteIdFromPostIds(_id);
     }
 
-    function follow(address _address, uint256 _value) public onlyWednesdays whenNotPaused {
+    /*****************************************************************************************
+     * Comments logic - add, like, report, delete
+     * ***************************************************************************************/
+    // Adds a new comment
+    function writeComment(uint256 _id, uint256 _parentId, uint256 _value, string _content, string _media) public onlyWednesdays whenNotPaused whenNotSuspended whenTimeElapsedComment {
+        require(amountForComment == _value);
+        require(bytes(_content).length > 0 || bytes(_media).length > 0);
+        _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
+        //for create
+        if (wednesdayCoin.transferFrom(msg.sender, posts[_parentId].poster, _value)) {
+            emit CommentContent(_id, _content, _media);
+            Comment memory comment = Comment(_id, _parentId, msg.sender, 0, 0, now, 0);
+            userComments[msg.sender].push(_id);
+            comments[_id] = comment;
+            postComments[_parentId].push(_id);
+            postTime[msg.sender] = now;
+        } else {
+            revert();
+        }
+    }
+
+    function likeComment(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+        require(_value >= minimumToLikeComment);
+        //ensure that post exists
+        if (comments[_id].id == _id) {
+            //shouldnt be able to like your own post
+            require(comments[_id].commenter != msg.sender);
+            if (wednesdayCoin.transferFrom(msg.sender, comments[_id].commenter, _value)) {
+                comments[_id].value += _value;
+                comments[_id].likes++;
+            } else {
+                revert();
+            }
+        }
+    }
+
+    function reportComment(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+        require(hasElapsedReport());
+        //ensure that post exists
+        if (comments[_id].id == _id) {
+            //shouldnt be able to report your own post
+            require(comments[_id].commenter != msg.sender);
+            if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
+                comments[_id].reportCount++;
+                reportTime[msg.sender] = now;
+            } else {
+                revert();
+            }
+        }
+    }
+
+    //delete a user comment
+    function deleteUserComment(address _user, uint256 _id) public onlyOwner {
+        for(uint i = 0; i < userComments[_user].length; i++) {
+            if(userComments[_user][i] == _id){
+                delete userComments[_user][i];
+            }
+        }
+    }
+
+    //delete a public comment
+    function deletePublicComment(uint256 _id) public onlyOwner {
+        if(comments[_id].id == _id){
+            delete comments[_id];
+        }
+    }
+
+    //to make it easier this one calls all delete functions
+    function deleteComment(address _user, uint256 _id) public onlyOwner {
+        deleteUserComment(_user, _id);
+        deletePublicComment(_id);
+    }
+
+    /*****************************************************************************************
+     * User logic - add/update profile info
+     * ***************************************************************************************/
+
+    function updateProfile(string username, string about, string profilePic) public onlyWednesdays whenNotPaused whenNotSuspended {
+        if (users[msg.sender].id != msg.sender) {
+            User memory user = User(msg.sender, '', '', '');
+            users[msg.sender] = user;
+        }
+        if (bytes(username).length > 0) {
+            users[msg.sender].username = username;
+        }
+        if (bytes(about).length > 0) {
+            users[msg.sender].about = about;
+        }
+        if (bytes(profilePic).length > 0) {
+            users[msg.sender].profilePic = profilePic;
+        }
+    }
+
+
+    /*****************************************************************************************
+     * Following/Followers logic
+     * ***************************************************************************************/
+
+    function follow(address _address, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
         require(_value >= minimumForFollow);
-        require(hasSuspensionElapsed());
         require(msg.sender != _address);
         // update that user is following address
         if (wednesdayCoin.transferFrom(msg.sender, _address, _value)) {
@@ -200,8 +261,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         }
     }
 
-    function unfollow(address _address) public onlyWednesdays whenNotPaused {
-        require(hasSuspensionElapsed());
+    function unfollow(address _address) public onlyWednesdays whenNotPaused whenNotSuspended {
         require(msg.sender != _address);
         // delete that user is folowing address
         for(uint i = 0; i < following[msg.sender].length; i++) {
@@ -216,14 +276,9 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
             }
         }
     }
-
-    function setAmountForPost(uint256 _amountForPost) public onlyOwner {
-        amountForPost = _amountForPost;
-    }
-
-    function getUserPostLength(address _user) public view returns (uint256){
-        return userPosts[_user].length;
-    }
+    /*****************************************************************************************
+     * Just in case logic
+     * ***************************************************************************************/
 
     // Used for transferring any accidentally sent ERC20 Token by the owner only
     function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
@@ -235,62 +290,4 @@ contract WednesdayClub is Ownable, Destructible, Pausable {
         dest.transfer(amount);
     }
 
-    function hasElapsed() public view returns (bool) {
-        if (now >= postTime[msg.sender] + postInterval) {
-            //has elapsed from postTime[msg.sender]
-            return true;
-        }
-        return false;
-    }
-
-    function hasElapsedReport() public view returns (bool) {
-        if (now >= reportTime[msg.sender] + reportInterval) {
-            //has elapsed from reportTime[msg.sender]
-            return true;
-        }
-        return false;
-    }
-
-    function hasSuspensionElapsed() public view returns (bool) {
-        if (now >= suspendedUsers[msg.sender]) {
-            //has elapsed from postTime[msg.sender]
-            return true;
-        }
-        return false;
-    }
-
-    function suspendUser(address _user, uint _time) public onlyOwner {
-        suspendedUsers[_user] = now + _time;
-    }
-
-    function setPostInterval(uint _postInterval) public onlyOwner {
-        postInterval = _postInterval;
-    }
-
-    function setReportingInterval(uint _reportInterval) public onlyOwner {
-        reportInterval = _reportInterval;
-    }
-    function setMinimumForLike(uint _minimumForLike) public onlyOwner {
-        minimumForLike = _minimumForLike;
-    }
-
-    function setMinimumForFollow(uint _minimumForFollow) public onlyOwner {
-        minimumForFollow = _minimumForFollow;
-    }
-
-    function setMinimumForReporting(uint _minimumForReporting) public onlyOwner {
-        minimumForReporting = _minimumForReporting;
-    }
-
-    function getPostIdsLength() public view returns (uint256){
-        return postIds.length;
-    }
-
-    function getFollowersLength(address _address) public view returns (uint256){
-        return followers[_address].length;
-    }
-
-    function getFollowingLength(address _address) public view returns (uint256){
-        return following[_address].length;
-    }
 }
