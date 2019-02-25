@@ -4,11 +4,12 @@ import "./ownable.sol";
 import "./pausable.sol";
 import "./destructible.sol";
 import "./tokenInterfaces.sol";
+import "./repayable.sol";
 import "./WednesdayClubPost.sol";
 import "./WednesdayClubComment.sol";
 import "./WednesdayClubUser.sol";
 
-contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, WednesdayClubComment, WednesdayClubUser {
+contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayClubPost, WednesdayClubComment, WednesdayClubUser {
 
     //onlyWednesdays Modifier
     modifier onlyWednesdays() {
@@ -49,14 +50,18 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         minimumToLikeComment = 100000000000000000000; //100
         minimumForFollow = 100000000000000000000; //100
         minimumForReporting = 100000000000000000000; //100
+        minimumForUpdatingProfile = 100000000000000000000; //100
+        minimumForBlockingUser = 100000000000000000000; //100
         reportInterval = 10 minutes;
     }
+
+    function () public payable {}
 
     /*****************************************************************************************
      * Posts logic - add, like, report, delete
      * ***************************************************************************************/
     // Adds a new post
-    function writePost(uint256 _id, uint256 _value, string _content, string _media) public onlyWednesdays whenNotPaused whenNotSuspended whenTimeElapsedPost {
+    function writePost(uint256 _id, uint256 _value, string _content, string _media) public onlyWednesdays repayable whenNotPaused whenNotSuspended whenTimeElapsedPost {
         require(amountForPost == _value);
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
@@ -73,7 +78,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         }
     }
 
-    function likePost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+    function likePost(uint256 _id, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(_value >= minimumToLikePost);
         //ensure that post exists
         if (posts[_id].id == _id) {
@@ -88,7 +93,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         }
     }
 
-    function reportPost(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+    function reportPost(uint256 _id, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(hasElapsedReport());
         //ensure that post exists
         if (posts[_id].id == _id) {
@@ -154,7 +159,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
      * Comments logic - add, like, report, delete
      * ***************************************************************************************/
     // Adds a new comment
-    function writeComment(uint256 _id, uint256 _parentId, uint256 _value, string _content, string _media) public onlyWednesdays whenNotPaused whenNotSuspended whenTimeElapsedComment {
+    function writeComment(uint256 _id, uint256 _parentId, uint256 _value, string _content, string _media) public onlyWednesdays repayable whenNotPaused whenNotSuspended whenTimeElapsedComment {
         require(amountForComment == _value);
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
@@ -171,7 +176,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         }
     }
 
-    function likeComment(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+    function likeComment(uint256 _id, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(_value >= minimumToLikeComment);
         //ensure that post exists
         if (comments[_id].id == _id) {
@@ -186,7 +191,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         }
     }
 
-    function reportComment(uint256 _id, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+    function reportComment(uint256 _id, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(hasElapsedReport());
         //ensure that post exists
         if (comments[_id].id == _id) {
@@ -227,19 +232,24 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
      * User logic - add/update profile info
      * ***************************************************************************************/
 
-    function updateProfile(string username, string about, string profilePic) public onlyWednesdays whenNotPaused whenNotSuspended {
-        if (users[msg.sender].id != msg.sender) {
-            User memory user = User(msg.sender, '', '', '');
-            users[msg.sender] = user;
-        }
-        if (bytes(username).length > 0) {
-            users[msg.sender].username = username;
-        }
-        if (bytes(about).length > 0) {
-            users[msg.sender].about = about;
-        }
-        if (bytes(profilePic).length > 0) {
-            users[msg.sender].profilePic = profilePic;
+    function updateProfile(string username, string about, string profilePic, uint256 value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
+        require(value >= minimumForUpdatingProfile);
+        if (wednesdayCoin.transferFrom(msg.sender, this, value)) {
+            if (users[msg.sender].id != msg.sender) {
+                User memory user = User(msg.sender, '', '', '');
+                users[msg.sender] = user;
+            }
+            if (bytes(username).length > 0) {
+                users[msg.sender].username = username;
+            }
+            if (bytes(about).length > 0) {
+                users[msg.sender].about = about;
+            }
+            if (bytes(profilePic).length > 0) {
+                users[msg.sender].profilePic = profilePic;
+            }
+        } else {
+            revert();
         }
     }
 
@@ -248,7 +258,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
      * Following/Followers logic
      * ***************************************************************************************/
 
-    function follow(address _address, uint256 _value) public onlyWednesdays whenNotPaused whenNotSuspended {
+    function follow(address _address, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(_value >= minimumForFollow);
         require(msg.sender != _address);
         // update that user is following address
@@ -261,7 +271,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         }
     }
 
-    function unfollow(address _address) public onlyWednesdays whenNotPaused whenNotSuspended {
+    function unfollow(address _address) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(msg.sender != _address);
         // delete that user is folowing address
         for(uint i = 0; i < following[msg.sender].length; i++) {
@@ -273,6 +283,31 @@ contract WednesdayClub is Ownable, Destructible, Pausable, WednesdayClubPost, We
         for(i = 0; i < followers[_address].length; i++) {
             if(followers[_address][i] == msg.sender){
                 delete followers[_address][i];
+            }
+        }
+    }
+
+    /*****************************************************************************************
+     * Blocking/Unblocking users logic
+     * ***************************************************************************************/
+
+    function blockUser(address _address, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
+        require(_value >= minimumForBlockingUser);
+        require(msg.sender != _address);
+        // update that user is following address
+        if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
+            blockedUsers[msg.sender].push(_address);
+        } else {
+            revert();
+        }
+    }
+
+    function unblockUser(address _address) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
+        require(msg.sender != _address);
+        // delete that user is folowing address
+        for(uint i = 0; i < blockedUsers[msg.sender].length; i++) {
+            if(blockedUsers[msg.sender][i] == _address){
+                delete blockedUsers[msg.sender][i];
             }
         }
     }

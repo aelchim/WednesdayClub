@@ -16,6 +16,9 @@ contract WednesdayClubUser is Ownable {
     // banned users
     mapping (address => uint) public suspendedUsers;
 
+    // blocked users
+    mapping (address => address[]) public blockedUsers;
+
     // followers: list of who is following
     mapping(address => address[]) public followers;
 
@@ -24,6 +27,12 @@ contract WednesdayClubUser is Ownable {
 
     // minimum amount For following
     uint256 public minimumForFollow;
+
+    // minimum amount For updating profile
+    uint256 public minimumForUpdatingProfile;
+
+    // minimum amount For blocking user
+    uint256 public minimumForBlockingUser;
 
     function hasSuspensionElapsed() public view returns (bool) {
         if (now >= suspendedUsers[msg.sender]) {
