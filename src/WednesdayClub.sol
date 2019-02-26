@@ -178,9 +178,9 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
 
     function likeComment(uint256 _id, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
         require(_value >= minimumToLikeComment);
-        //ensure that post exists
+        //ensure that comment exists
         if (comments[_id].id == _id) {
-            //shouldnt be able to like your own post
+            //shouldnt be able to like your own comment
             require(comments[_id].commenter != msg.sender);
             if (wednesdayCoin.transferFrom(msg.sender, comments[_id].commenter, _value)) {
                 comments[_id].value += _value;
