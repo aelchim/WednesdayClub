@@ -14,6 +14,11 @@ contract WednesdayClubComment is Ownable {
         uint256 reportCount;
     }
 
+    modifier whenTimeElapsedComment() {
+        require(hasElapsedComment());
+        _;
+    }
+
     event CommentContent(uint256 indexed id, string content, string media);
 
     // list of ids of all comments

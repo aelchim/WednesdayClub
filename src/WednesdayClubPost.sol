@@ -13,6 +13,11 @@ contract WednesdayClubPost is Ownable {
         uint256 reportCount;
     }
 
+    modifier whenTimeElapsedPost() {
+        require(hasElapsedPost());
+        _;
+    }
+
     event PostContent(uint256 indexed id, string content, string media);
 
     // The posts that each address has written

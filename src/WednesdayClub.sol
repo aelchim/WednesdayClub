@@ -20,21 +20,6 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
         _;
     }
 
-    modifier whenNotSuspended() {
-        require(hasSuspensionElapsed());
-        _;
-    }
-
-    modifier whenTimeElapsedPost() {
-        require(hasElapsedPost());
-        _;
-    }
-
-    modifier whenTimeElapsedComment() {
-        require(hasElapsedComment());
-        _;
-    }
-
     // WednesdayCoin contract being held
     WednesdayCoin public wednesdayCoin;
 
@@ -139,8 +124,8 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
     }
 
     // deleteAllPosts in groups i.e. delete 100, then 100 again, etc - for saving on gas and incase to many
-    function deleteAllPosts(uint256 amountToDelete) public onlyOwner {
-        for(uint i = 0; i < amountToDelete; i++) {
+    function deleteAllPosts(uint256 _amountToDelete) public onlyOwner {
+        for(uint i = 0; i < _amountToDelete; i++) {
             address poster = posts[postIds[i]].poster;
             deleteUserPost(poster, posts[postIds[i]].id);
             deletePublicPost(posts[postIds[i]].id);
@@ -232,21 +217,24 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
      * User logic - add/update profile info
      * ***************************************************************************************/
 
-    function updateProfile(string username, string about, string profilePic, uint256 value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
-        require(value >= minimumForUpdatingProfile);
-        if (wednesdayCoin.transferFrom(msg.sender, this, value)) {
+    function updateProfile(string _username, string _about, string _profilePic, string _site, uint256 _value) public onlyWednesdays repayable whenNotPaused whenNotSuspended {
+        require(_value >= minimumForUpdatingProfile);
+        if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
             if (users[msg.sender].id != msg.sender) {
-                User memory user = User(msg.sender, '', '', '');
+                User memory user = User(msg.sender, '', '', '', '');
                 users[msg.sender] = user;
             }
-            if (bytes(username).length > 0) {
-                users[msg.sender].username = username;
+            if (bytes(_username).length > 0) {
+                users[msg.sender].username = _username;
             }
-            if (bytes(about).length > 0) {
-                users[msg.sender].about = about;
+            if (bytes(_about).length > 0) {
+                users[msg.sender].about = _about;
             }
-            if (bytes(profilePic).length > 0) {
-                users[msg.sender].profilePic = profilePic;
+            if (bytes(_profilePic).length > 0) {
+                users[msg.sender].profilePic = _profilePic;
+            }
+            if (bytes(_site).length > 0) {
+                users[msg.sender].site = _site;
             }
         } else {
             revert();
@@ -311,18 +299,49 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
             }
         }
     }
+
     /*****************************************************************************************
      * Just in case logic
      * ***************************************************************************************/
 
     // Used for transferring any accidentally sent ERC20 Token by the owner only
-    function transferAnyERC20Token(address tokenAddress, uint tokens) public onlyOwner returns (bool success) {
-        return ERC20Interface(tokenAddress).transfer(owner, tokens);
+    function transferAnyERC20Token(address _tokenAddress, uint _tokens) public onlyOwner returns (bool success) {
+        return ERC20Interface(_tokenAddress).transfer(owner, _tokens);
     }
 
     // Used for transferring any accidentally sent Ether by the owner only
-    function transferEther(address dest, uint amount) public onlyOwner {
-        dest.transfer(amount);
+    function transferEther(address _dest, uint _amount) public onlyOwner {
+        _dest.transfer(_amount);
     }
 
+    // Used if a user wants to delete all their data
+    function nukeMe() public {
+        nukePosts();
+        nukeComments();
+        nukeUser();
+    }
+
+    function nukePosts() public {
+        for (uint i = 0; i < userPosts[msg.sender].length; i++) {
+            uint256 id = userPosts[msg.sender][i];
+            delete posts[id];
+            delete postIds[id];
+        }
+        delete userPosts[msg.sender];
+    }
+
+    function nukeComments() public {
+        for (uint i = 0; i < userComments[msg.sender].length; i++) {
+            uint256 id = userComments[msg.sender][i];
+            delete comments[id];
+        }
+        delete userComments[msg.sender];
+    }
+
+    function nukeUser() public {
+        delete users[msg.sender];
+        delete blockedUsers[msg.sender];
+        delete followers[msg.sender];
+        delete following[msg.sender];
+    }
 }

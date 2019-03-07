@@ -9,6 +9,12 @@ contract WednesdayClubUser is Ownable {
         string username;
         string about;
         string profilePic;
+        string site;
+    }
+
+    modifier whenNotSuspended() {
+        require(hasSuspensionElapsed());
+        _;
     }
 
     mapping(address => User) public users;
@@ -36,7 +42,7 @@ contract WednesdayClubUser is Ownable {
 
     function hasSuspensionElapsed() public view returns (bool) {
         if (now >= suspendedUsers[msg.sender]) {
-            //has elapsed from postTime[msg.sender]
+            //has elapsed from suspendedUsers[msg.sender]
             return true;
         }
         return false;

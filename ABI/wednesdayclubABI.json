@@ -1,8 +1,58 @@
 [
   {
     "constant": false,
+    "inputs": [
+      {
+        "name": "_address",
+        "type": "address"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "blockUser",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_amountToDelete",
+        "type": "uint256"
+      }
+    ],
+    "name": "deleteAllPosts",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
     "inputs": [],
     "name": "deleteAllPosts",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "deleteComment",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -48,7 +98,39 @@
         "type": "uint256"
       }
     ],
+    "name": "deletePublicComment",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
     "name": "deletePublicPost",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_user",
+        "type": "address"
+      },
+      {
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "deleteUserComment",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -125,7 +207,61 @@
         "type": "uint256"
       }
     ],
+    "name": "likeComment",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
     "name": "likePost",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "nukeComments",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "nukeMe",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "nukePosts",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "nukeUser",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -144,29 +280,16 @@
     "constant": false,
     "inputs": [
       {
-        "name": "from",
-        "type": "address"
-      },
-      {
-        "name": "value",
+        "name": "_id",
         "type": "uint256"
       },
       {
-        "name": "tokenContract",
-        "type": "address"
-      },
-      {
-        "name": "extraData",
-        "type": "bytes"
+        "name": "_value",
+        "type": "uint256"
       }
     ],
-    "name": "receiveApproval",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "name": "reportComment",
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -221,11 +344,11 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_minimumForLike",
+        "name": "_minimumForReporting",
         "type": "uint256"
       }
     ],
-    "name": "setMinimumForLike",
+    "name": "setMinimumForReporting",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -235,11 +358,25 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_minimumForReporting",
+        "name": "_minimumToLikeComment",
         "type": "uint256"
       }
     ],
-    "name": "setMinimumForReporting",
+    "name": "setMinimumToLikeComment",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_minimumToLikePost",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMinimumToLikePost",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -277,20 +414,6 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_coinAddress",
-        "type": "address"
-      }
-    ],
-    "name": "setWednesdayCoin",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
         "name": "_user",
         "type": "address"
       },
@@ -309,11 +432,11 @@
     "constant": false,
     "inputs": [
       {
-        "name": "tokenAddress",
+        "name": "_tokenAddress",
         "type": "address"
       },
       {
-        "name": "tokens",
+        "name": "_tokens",
         "type": "uint256"
       }
     ],
@@ -332,11 +455,11 @@
     "constant": false,
     "inputs": [
       {
-        "name": "dest",
+        "name": "_dest",
         "type": "address"
       },
       {
-        "name": "amount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -368,6 +491,20 @@
         "type": "address"
       }
     ],
+    "name": "unblockUser",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_address",
+        "type": "address"
+      }
+    ],
     "name": "unfollow",
     "outputs": [],
     "payable": false,
@@ -378,6 +515,66 @@
     "constant": false,
     "inputs": [],
     "name": "unpause",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_username",
+        "type": "string"
+      },
+      {
+        "name": "_about",
+        "type": "string"
+      },
+      {
+        "name": "_profilePic",
+        "type": "string"
+      },
+      {
+        "name": "_site",
+        "type": "string"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateProfile",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_parentId",
+        "type": "uint256"
+      },
+      {
+        "name": "_value",
+        "type": "uint256"
+      },
+      {
+        "name": "_content",
+        "type": "string"
+      },
+      {
+        "name": "_media",
+        "type": "string"
+      }
+    ],
+    "name": "writeComment",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -416,6 +613,33 @@
     "type": "constructor"
   },
   {
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "name": "content",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "media",
+        "type": "string"
+      }
+    ],
+    "name": "CommentContent",
+    "type": "event"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -435,6 +659,23 @@
       }
     ],
     "name": "PostContent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "amt",
+        "type": "uint256"
+      }
+    ],
+    "name": "Repaid",
     "type": "event"
   },
   {
@@ -464,7 +705,120 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "amountForComment",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "amountForPost",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "blockedUsers",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "commentInterval",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "comments",
+    "outputs": [
+      {
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "parentId",
+        "type": "uint256"
+      },
+      {
+        "name": "commenter",
+        "type": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256"
+      },
+      {
+        "name": "likes",
+        "type": "uint256"
+      },
+      {
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "name": "reportCount",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "commentTime",
     "outputs": [
       {
         "name": "",
@@ -595,7 +949,21 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "hasElapsed",
+    "name": "hasElapsedComment",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "hasElapsedPost",
     "outputs": [
       {
         "name": "",
@@ -637,6 +1005,20 @@
   {
     "constant": true,
     "inputs": [],
+    "name": "minimumForBlockingUser",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
     "name": "minimumForFollow",
     "outputs": [
       {
@@ -651,7 +1033,7 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "minimumForLike",
+    "name": "minimumForReporting",
     "outputs": [
       {
         "name": "",
@@ -665,7 +1047,35 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "minimumForReporting",
+    "name": "minimumForUpdatingProfile",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "minimumToLikeComment",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "minimumToLikePost",
     "outputs": [
       {
         "name": "",
@@ -698,6 +1108,29 @@
       {
         "name": "",
         "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "postComments",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
       }
     ],
     "payable": false,
@@ -859,11 +1292,69 @@
         "type": "uint256"
       }
     ],
+    "name": "userComments",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "userPosts",
     "outputs": [
       {
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "users",
+    "outputs": [
+      {
+        "name": "id",
+        "type": "address"
+      },
+      {
+        "name": "username",
+        "type": "string"
+      },
+      {
+        "name": "about",
+        "type": "string"
+      },
+      {
+        "name": "profilePic",
+        "type": "string"
+      },
+      {
+        "name": "site",
+        "type": "string"
       }
     ],
     "payable": false,
