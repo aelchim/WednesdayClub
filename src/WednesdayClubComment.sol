@@ -53,4 +53,8 @@ contract WednesdayClubComment is Ownable {
     function setMinimumToLikeComment(uint _minimumToLikeComment) public onlyOwner {
         minimumToLikeComment = _minimumToLikeComment;
     }
+
+    function postCommentsLength(uint256 _postId) public view returns (uint256) {
+        return postComments[_postId].length;
+    }
 }

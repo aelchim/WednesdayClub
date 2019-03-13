@@ -50,6 +50,8 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
         require(amountForPost == _value);
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
+        //ensure that post does not exists
+        require(posts[_id].id != _id);
         //for create
         if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
             emit PostContent(_id, _content, _media);
@@ -148,6 +150,9 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
         require(amountForComment == _value);
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
+        //require post exists
+        require(posts[_parentId].id == _parentId);
+        require(comments[_id].id != _id);
         //for create
         if (wednesdayCoin.transferFrom(msg.sender, posts[_parentId].poster, _value)) {
             emit CommentContent(_id, _content, _media);
@@ -155,7 +160,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
             userComments[msg.sender].push(_id);
             comments[_id] = comment;
             postComments[_parentId].push(_id);
-            postTime[msg.sender] = now;
+            commentTime[msg.sender] = now;
         } else {
             revert();
         }
