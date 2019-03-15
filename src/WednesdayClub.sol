@@ -26,6 +26,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
     //constructor
     constructor() public {
         //for testing -- 0xEDFc38FEd24F14aca994C47AF95A14a46FBbAA16
+        //for prod -- 0x7848ae8F19671Dc05966dafBeFbBbb0308BDfAbD
         wednesdayCoin = WednesdayCoin(0x7848ae8F19671Dc05966dafBeFbBbb0308BDfAbD);
         amountForPost = 10000000000000000000000; //10k
         amountForComment = 1000000000000000000000; //1k
@@ -50,7 +51,7 @@ contract WednesdayClub is Ownable, Destructible, Pausable, Repaying, WednesdayCl
         require(amountForPost == _value);
         require(bytes(_content).length > 0 || bytes(_media).length > 0);
         _id = uint256(keccak256(_id, now, blockhash(block.number - 1), block.coinbase));
-        //ensure that post does not exists
+        //ensure that post doesnot exists
         require(posts[_id].id != _id);
         //for create
         if (wednesdayCoin.transferFrom(msg.sender, this, _value)) {
