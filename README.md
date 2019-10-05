@@ -1,4 +1,4 @@
-# WednesdayClub
+# WednesdayClub - Deprecated (THIS IS NOT HOW IT IS CURRENTLY IMPLEMENTED BUT WE WILL LEAVE IT UP AS IT IS RUNNING ON ETHEREUM AND WE MAY GO BACK TO IT SOMEDAY)!
 WednesdayClub Smart Contract - for a social network that works only on Wednesdays and uses WED!
 
 ![WednesdayClub](https://i.imgur.com/kLLRDzi.gif)
